@@ -78,7 +78,7 @@
     right: 0;
     background: var(--bg-white);
     flex-direction: column;
-    padding: 20px;
+    /* padding: 20px; */
     box-shadow: var(--shadow-md);
     max-height: 0;
     overflow: hidden;
