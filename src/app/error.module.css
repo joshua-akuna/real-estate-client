@@ -1,0 +1,23 @@
+.errorContainer {
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.errorContent {
+  text-align: center;
+  max-width: 500px;
+}
+
+.errorContent h1 {
+  font-size: 2rem;
+  margin-bottom: 16px;
+  color: var(--error-color);
+}
+
+.errorContent p {
+  margin-bottom: 24px;
+  color: var(--text-secondary);
+}
