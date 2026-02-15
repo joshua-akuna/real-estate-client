@@ -23,12 +23,8 @@ export default function Navbar() {
         <button
           className={styles.menuToggle}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-label='Toggle Menu'
         >
-          {/* <span></span>
-          <span></span>
-          <span></span> */}
-          {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+          {isMenuOpen ? <X /> : <Menu />}
         </button>
 
         <ul
@@ -40,21 +36,6 @@ export default function Navbar() {
               className={isActive('/properties') ? styles.active : ''}
             >
               Properties
-            </Link>
-          </li>
-          <li>
-            <Link
-              href='/properties/my-properties'
-              className={
-                isActive('/properties/my-properties') ? styles.active : ''
-              }
-            >
-              My Properties
-            </Link>
-          </li>
-          <li>
-            <Link href='/properties/new' className='btn btn-primary'>
-              List Property
             </Link>
           </li>
           <li>
@@ -74,8 +55,23 @@ export default function Navbar() {
             </Link>
           </li>
           <li>
+            <Link
+              href='/properties/my-properties'
+              className={
+                isActive('/properties/my-properties') ? styles.active : ''
+              }
+            >
+              My Properties
+            </Link>
+          </li>
+          <li>
             <Link href='/auth/login' className='btn btn-outline'>
               Login
+            </Link>
+          </li>
+          <li>
+            <Link href='/properties/new' className='btn btn-primary'>
+              List Property
             </Link>
           </li>
         </ul>
