@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Mail } from 'lucide-react';
+import { authAPI } from '@/services/apiService';
 import styles from './LoginForm.module.css';
 
 export default function LoginForm() {
@@ -12,9 +14,22 @@ export default function LoginForm() {
     password: '',
   });
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-  function handleSubmit() {
-    console.log('Submitting');
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    try {
+      const response = await authAPI.login(formData);
+      console.log('Response: ', response.data);
+      router.push('/properties');
+    } catch (error) {
+      //   console.error(error.response?.data?.message);
+      setError(error.response?.data?.message || 'Login failed');
+    } finally {
+      setLoading(false);
+    }
   }
 
   function handleChange(e) {
@@ -25,7 +40,7 @@ export default function LoginForm() {
   }
 
   function handleGoogleLogin() {
-    window.location.href = `${NEXT_PUBLIC_API_UR}/api/v1/auth/google`;
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/v1/auth/google`;
   }
 
   return (
@@ -33,10 +48,12 @@ export default function LoginForm() {
       <form onSubmit={handleSubmit} className={styles.form}>
         <h2>Login</h2>
 
-        {error && <div>{error}</div>}
+        {error && <div className='error-message'>{error}</div>}
 
-        <div className='form-group form-top'>
-          <label htmlFor='email'>Email</label>
+        <div className='form-group'>
+          <label htmlFor='email' className='form-label'>
+            Email
+          </label>
           <input
             type='email'
             name='email'
