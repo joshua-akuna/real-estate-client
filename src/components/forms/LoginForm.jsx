@@ -22,7 +22,7 @@ export default function LoginForm() {
     setError('');
     try {
       const response = await authAPI.login(formData);
-      console.log('Response: ', response.data);
+      //   console.log('Response: ', response.data);
       router.push('/properties');
     } catch (error) {
       //   console.error(error.response?.data?.message);
