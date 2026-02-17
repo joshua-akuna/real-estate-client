@@ -123,6 +123,20 @@ img {
   transition: var(--transition);
 }
 
+.form-eye-input {
+  position: relative;
+}
+
+.form-eye {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
 .form-input:focus,
 .form-select:focus,
 .form-textarea:focus {
