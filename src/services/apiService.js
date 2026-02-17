@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { register } from 'next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup';
 
 const apiService = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -14,6 +15,7 @@ apiService.interceptors.request.use(
     return config;
   },
   (error) => {
+    // console.log(error);
     return Promise.reject(error);
   },
 );
@@ -24,6 +26,7 @@ apiService.interceptors.response.use(
     return response;
   },
   (error) => {
+    // console.log(error);
     if (error.response?.status === 401) {
       const currentPath =
         window.location.pathname !== 'undefined'
@@ -42,4 +45,5 @@ apiService.interceptors.response.use(
 // AUTH API
 export const authAPI = {
   login: (data) => apiService.post('/v1/auth/login', data),
+  register: (data) => apiService.post('/v1/auth/register', data),
 };
