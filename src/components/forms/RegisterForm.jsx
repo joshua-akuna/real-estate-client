@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Mail } from 'lucide-react';
+import { Mail, Eye, EyeOff } from 'lucide-react';
 import styles from './LoginForm.module.css';
+import { authAPI } from '@/services/apiService';
 
 export default function RegisterForm() {
   const [formData, setFormData] = useState({
@@ -12,25 +14,46 @@ export default function RegisterForm() {
     full_name: '',
     phone: '',
   });
+  const [avatar, setAvatar] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
   function handleChange(e) {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
+    setError('');
   }
-
-  function handleAvatarChange(e) {}
 
   function handleGoogleLogin() {
     window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/v1/auth/google`;
   }
 
-  function handleSubmit() {}
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
 
-  console.log(formData);
+    try {
+      const data = new FormData();
+      data.append('email', formData.email);
+      data.append('full_name', formData.full_name);
+      data.append('password', formData.password);
+      if (formData.phone) data.append('phone', formData.phone);
+      if (avatar) data.append('avatar', avatar);
+
+      const response = await authAPI.register(data);
+      // console.log('Response:', response.data);
+      router.push('/properties');
+    } catch (error) {
+      setError(error.response?.data?.message || 'Registration failed');
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <div className={styles.formContainer}>
@@ -67,15 +90,24 @@ export default function RegisterForm() {
           <label htmlFor='password' className='form-label'>
             Password *
           </label>
-          <input
-            type='password'
-            name='password'
-            value={formData.password}
-            onChange={handleChange}
-            minLength={6}
-            className='form-input'
-            required
-          />
+          <div className='form-eye-input'>
+            <input
+              type={showPassword ? 'text' : 'password'}
+              name='password'
+              value={formData.password}
+              onChange={handleChange}
+              minLength={6}
+              className='form-input'
+              required
+            />
+            <button
+              className='form-eye'
+              type='button'
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <EyeOff /> : <Eye />}
+            </button>
+          </div>
         </div>
         <div className='form-group'>
           <label htmlFor='phone' className='form-label'>
@@ -86,18 +118,6 @@ export default function RegisterForm() {
             name='phone'
             value={formData.phone}
             onChange={handleChange}
-            className='form-input'
-          />
-        </div>
-        <div className='form-group'>
-          <label htmlFor='avater' className='form-label'>
-            Profile Picture
-          </label>
-          <input
-            type='file'
-            name='avatar'
-            accept='image/*'
-            onChange={handleAvatarChange}
             className='form-input'
           />
         </div>
