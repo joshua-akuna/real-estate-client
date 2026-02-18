@@ -54,4 +54,5 @@ export const propertyAPI = {
     apiService.post('/v1/properties', data, {
       headers: { 'Content-Type': 'multipart/form-data' },
     }),
+  getProperties: (params) => apiService.get('/v1/properties', { params }),
 };
