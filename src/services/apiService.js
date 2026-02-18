@@ -47,3 +47,11 @@ export const authAPI = {
   login: (data) => apiService.post('/v1/auth/login', data),
   register: (data) => apiService.post('/v1/auth/register', data),
 };
+
+// Property API
+export const propertyAPI = {
+  createProperty: (data) =>
+    apiService.post('/v1/properties', data, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    }),
+};
