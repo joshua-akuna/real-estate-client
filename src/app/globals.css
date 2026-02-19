@@ -78,7 +78,7 @@ img {
 
 .btn-primary {
   background-color: var(--primary-color);
-  color: white;
+  color: white !important;
 }
 
 .btn-primary:hover {
@@ -98,7 +98,7 @@ img {
 
 .btn-outline:hover {
   background-color: var(--primary-color);
-  color: white;
+  color: white !important;
 }
 
 .form-group {
