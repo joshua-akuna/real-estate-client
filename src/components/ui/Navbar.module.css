@@ -66,6 +66,11 @@
   background: rgba(79, 70, 229, 0.1);
 }
 
+.logout {
+  width: 100%;
+  font-size: 1rem;
+}
+
 @media (max-width: 768px) {
   .menuToggle {
     display: flex;

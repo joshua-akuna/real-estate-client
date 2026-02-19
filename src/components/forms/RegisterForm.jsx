@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Mail, Eye, EyeOff } from 'lucide-react';
 import styles from './LoginForm.module.css';
 import { authAPI } from '@/services/apiService';
+import { useAuth } from '@/app/context/AuthContext';
 
 export default function RegisterForm() {
   const [formData, setFormData] = useState({
@@ -18,6 +19,7 @@ export default function RegisterForm() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const { setUser } = useAuth();
   const router = useRouter();
 
   function handleChange(e) {
@@ -47,6 +49,7 @@ export default function RegisterForm() {
 
       const response = await authAPI.register(data);
       // console.log('Response:', response.data);
+      setUser(response.data?.user);
       router.push('/properties');
     } catch (error) {
       setError(error.response?.data?.message || 'Registration failed');

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Mail } from 'lucide-react';
 import { authAPI } from '@/services/apiService';
 import styles from './LoginForm.module.css';
+import { useAuth } from '@/app/context/AuthContext';
 
 export default function LoginForm() {
   const [error, setError] = useState('');
@@ -14,6 +15,7 @@ export default function LoginForm() {
     password: '',
   });
   const [loading, setLoading] = useState(false);
+  const { setUser } = useAuth();
   const router = useRouter();
 
   async function handleSubmit(e) {
@@ -22,7 +24,8 @@ export default function LoginForm() {
     setError('');
     try {
       const response = await authAPI.login(formData);
-      //   console.log('Response: ', response.data);
+      // console.log(response.data?.user);
+      setUser(response.data?.user);
       router.push('/properties');
     } catch (error) {
       //   console.error(error.response?.data?.message);

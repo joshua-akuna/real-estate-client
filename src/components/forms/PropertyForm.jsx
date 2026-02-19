@@ -171,7 +171,7 @@ export default function PropertyForm() {
             className='form-select'
             required
           >
-            <option value='' selected disabled hidden>
+            <option value='' disabled hidden>
               Select an option
             </option>
             <option value='house'>House</option>
@@ -194,7 +194,7 @@ export default function PropertyForm() {
             onChange={handleChange}
             required
           >
-            <option value='' selected disabled hidden>
+            <option value='' disabled hidden>
               Select an option
             </option>
             <option value='rent'>For Rent</option>
@@ -233,7 +233,7 @@ export default function PropertyForm() {
               onChange={handleChange}
               required
             >
-              <option value='' selected disabled hidden>
+              <option value='' disabled hidden>
                 Select an option
               </option>
               <option value='day'>Per Day</option>

@@ -2,15 +2,40 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import styles from './Navbar.module.css';
+import { authAPI } from '@/services/apiService';
+import { useAuth } from '@/app/context/AuthContext';
 
 export default function Navbar() {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, setUser } = useAuth();
+  const router = useRouter();
 
   const isActive = (path) => pathname === path;
+
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const response = await authAPI.profile();
+        setUser(response.data?.user);
+      } catch (error) {
+        setUser(null);
+      }
+    };
+    getUser();
+  }, []);
+
+  async function handleLogout(e) {
+    e.preventDefault();
+    await authAPI.logout();
+    setUser(null);
+    router.push('/');
+    router.refresh();
+  }
 
   return (
     <nav className={styles.navbar}>
@@ -64,11 +89,20 @@ export default function Navbar() {
               My Properties
             </Link>
           </li>
-          <li>
-            <Link href='/auth/login' className='btn btn-outline'>
-              Login
-            </Link>
-          </li>
+          {user ? (
+            <button
+              onClick={handleLogout}
+              className={`${styles.logout} btn btn-outline`}
+            >
+              Logout
+            </button>
+          ) : (
+            <li>
+              <Link href='/auth/login' className='btn btn-outline'>
+                Login
+              </Link>
+            </li>
+          )}
           <li>
             <Link href='/properties/new' className='btn btn-primary'>
               List Property
