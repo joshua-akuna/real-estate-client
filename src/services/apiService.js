@@ -46,6 +46,8 @@ apiService.interceptors.response.use(
 export const authAPI = {
   login: (data) => apiService.post('/v1/auth/login', data),
   register: (data) => apiService.post('/v1/auth/register', data),
+  profile: () => apiService.get('/v1/auth/profile'),
+  logout: () => apiService.post('/v1/auth/logout'),
 };
 
 // Property API
