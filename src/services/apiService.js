@@ -34,7 +34,8 @@ apiService.interceptors.response.use(
           : '';
 
       // Redirect to login if unauthorized and not already on login page
-      if (currentPath !== '/auth/login' && typeof window !== undefined) {
+      if (currentPath === '/' || currentPath === '/properties') {
+      } else if (currentPath !== '/auth/login' && typeof window !== undefined) {
         window.location.href = '/auth/login';
       }
     }
