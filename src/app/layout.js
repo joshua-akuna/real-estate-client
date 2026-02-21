@@ -11,7 +11,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang='en'>
-      <body>
+      <body style={{ animation: 'fadeIn 0.1s ease forwards' }}>
         <AuthProvider>
           <Navbar />
           <main>{children}</main>
