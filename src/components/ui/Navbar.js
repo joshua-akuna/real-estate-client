@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import styles from './Navbar.module.css';
@@ -14,8 +14,27 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, setUser } = useAuth();
   const router = useRouter();
+  const menuRef = useRef(null);
 
   const isActive = (path) => pathname === path;
+
+  useEffect(() => {
+    const closeMenu = () => {
+      setIsMenuOpen(false);
+    };
+    closeMenu();
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    function handleClickOutside(e) {
+      if (!menuRef.current?.contains(e.target)) {
+        setIsMenuOpen(false);
+      }
+    }
+    document.addEventListener('mouseup', handleClickOutside);
+    return () => document.removeEventListener('mouseup', handleClickOutside);
+  }, [isMenuOpen]);
 
   useEffect(() => {
     const getUser = async () => {
