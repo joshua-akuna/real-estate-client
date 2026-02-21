@@ -59,3 +59,12 @@ export const propertyAPI = {
     }),
   getProperties: (params) => apiService.get('/v1/properties', { params }),
 };
+
+// Favorite API
+export const favoriteAPI = {
+  toggleFavorite: (propertyId) =>
+    apiService.post('/v1/favorites/toggle', { property_id: propertyId }),
+  getFavorites: () => apiService.get('/favorites'),
+  checkFavorites: (propertyId) =>
+    apiService.get(`/favorites/check/${propertyId}`),
+};
