@@ -1,23 +1,34 @@
-import { useState } from 'react';
+'use client';
+
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { formatPrice } from '@/utils/helpers';
 import styles from './PropertyCard.module.css';
 import { MapPin, Bed, Bath } from 'lucide-react';
+import { useFavorites } from '@/hooks/useFavorites';
 
-export default function PropertyCard({ property, onFavoriteToggle }) {
+export default function PropertyCard({ property }) {
   const [isFavorited, setIsFavorited] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { toggleFavorite, checkFavorite } = useFavorites();
 
-  const mainImage = property.images?.[0]?.image_url;
-  //   console.log(mainImage);
+  const mainImage =
+    property.images?.[0]?.image_url || '/images/placeholder.avif';
+
+  useEffect(() => {
+    const checkFav = async () => {
+      setIsFavorited(await checkFavorite(property.id));
+    };
+    checkFav();
+  }, []);
 
   async function handleFavoriteClick(e) {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      const favorited = await onFavoriteToggle(property.id);
+      const favorited = await toggleFavorite(property.id);
       setIsFavorited(favorited);
     } catch (error) {
       console.error('Error toggling favorite:', error);
@@ -62,18 +73,18 @@ export default function PropertyCard({ property, onFavoriteToggle }) {
           {formatPrice(property.price, property.rental_period)}
         </p>
         <div className={styles.features}>
-          {property.bedrooms && (
+          {property.bedrooms > 0 && (
             <span>
               <Bed color='blue' size={18} /> {property.bedrooms} beds
             </span>
           )}
-          {property.bathrooms && (
+          {property.bathrooms > 0 && (
             <span>
               <Bath color='blue' size={18} /> {parseInt(property.bathrooms)}{' '}
               baths
             </span>
           )}
-          {property.area_sqft && (
+          {property.area_sqft > 0 && (
             <span>📐 {property.area_sqft.toLocaleString()} sqft</span>
           )}
         </div>
