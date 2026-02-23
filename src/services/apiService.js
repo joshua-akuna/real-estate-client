@@ -57,6 +57,7 @@ export const propertyAPI = {
       headers: { 'Content-Type': 'multipart/form-data' },
     }),
   getProperties: (params) => apiService.get('/v1/properties', { params }),
+  getProperty: (id) => apiService.get(`/v1/properties/${id}`),
 };
 
 // Favorite API
