@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { register } from 'next/dist/next-devtools/userspace/pages/pages-dev-overlay-setup';
 
 const apiService = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -65,6 +64,6 @@ export const favoriteAPI = {
   toggleFavorite: (propertyId) =>
     apiService.post('/v1/favorites/toggle', { property_id: propertyId }),
   getFavorites: () => apiService.get('/favorites'),
-  checkFavorites: (propertyId) =>
-    apiService.get(`/favorites/check/${propertyId}`),
+  checkFavorite: (propertyId) =>
+    apiService.get(`/v1/favorites/check/${propertyId}`),
 };
