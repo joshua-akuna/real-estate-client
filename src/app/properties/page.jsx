@@ -5,6 +5,7 @@ import { Suspense } from 'react';
 import Loading from '@/components/ui/Loading';
 import PropertyCard from '@/components/ui/PropertyCard';
 import Link from 'next/link';
+import { useFavorites } from '@/hooks/useFavorites';
 
 export default async function PropertiesPage({ searchParams }) {
   const params = await searchParams;
@@ -27,8 +28,8 @@ export default async function PropertiesPage({ searchParams }) {
 
   try {
     const response = await propertyAPI.getProperties(cleanFilters);
-    properties = response.data.properties || [];
-    pagination = response.data.pagination || null;
+    properties = response.data?.properties ?? [];
+    pagination = response.data?.pagination ?? null;
   } catch (error) {
     console.error('Error loading properties:', error);
   }
@@ -38,12 +39,10 @@ export default async function PropertiesPage({ searchParams }) {
 
   function buildPageUrl(page) {
     const p = new URLSearchParams({ ...params, page });
-    console.log(`/properties?${p.toString()}`);
+    // console.log(`/properties?${p.toString()}`);
     return `/properties?${p.toString()}`;
   }
-
   // console.log('Properties:', properties);
-
   return (
     <div className={styles.page}>
       <div className='container'>
@@ -55,41 +54,39 @@ export default async function PropertiesPage({ searchParams }) {
         <FiltersForm filters={filters} />
 
         <Suspense fallback={<Loading />}>
-          <>
-            {properties.length === 0 ? (
-              <div className={styles.noResults}>
-                <p>No properties found matching your criteria</p>
+          {properties.length === 0 ? (
+            <div className={styles.noResults}>
+              <p>No properties found matching your criteria</p>
+            </div>
+          ) : (
+            <>
+              <div className={styles.results}>
+                <p>
+                  Showing {properties.length} of {pagination?.totalProperties}{' '}
+                  properties
+                </p>
               </div>
-            ) : (
-              <>
-                <div className={styles.results}>
-                  <p>
-                    Showing {properties.length} of {pagination?.totalProperties}{' '}
-                    properties
-                  </p>
-                </div>
-                <div className='grid grid-3'>
-                  {properties.map((property) => (
-                    <PropertyCard key={property.id} property={property} />
-                  ))}
-                </div>
+              <div className='grid grid-3'>
+                {properties.map((property) => (
+                  <PropertyCard key={property.id} property={property} />
+                ))}
+              </div>
 
-                {totalPages > 1 && (
-                  <div className={styles.pagination}>
-                    {currentPage > 1 && (
-                      <Link href={buildPageUrl(currentPage - 1)}>Previous</Link>
-                    )}
-                    <span>
-                      Page {currentPage} of {totalPages}
-                    </span>
-                    {currentPage < totalPages && (
-                      <Link href={buildPageUrl(currentPage + 1)}>Next</Link>
-                    )}
-                  </div>
-                )}
-              </>
-            )}
-          </>
+              {totalPages > 1 && (
+                <div className={styles.pagination}>
+                  {currentPage > 1 && (
+                    <Link href={buildPageUrl(currentPage - 1)}>Previous</Link>
+                  )}
+                  <span>
+                    Page {currentPage} of {totalPages}
+                  </span>
+                  {currentPage < totalPages && (
+                    <Link href={buildPageUrl(currentPage + 1)}>Next</Link>
+                  )}
+                </div>
+              )}
+            </>
+          )}
         </Suspense>
       </div>
     </div>
