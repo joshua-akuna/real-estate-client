@@ -5,7 +5,6 @@ import { Suspense } from 'react';
 import Loading from '@/components/ui/Loading';
 import PropertyCard from '@/components/ui/PropertyCard';
 import Link from 'next/link';
-import { useFavorites } from '@/hooks/useFavorites';
 
 export default async function PropertiesPage({ searchParams }) {
   const params = await searchParams;
