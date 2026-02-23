@@ -1,61 +1,48 @@
-'use client';
-
-import { useEffect, useState } from 'react';
 import { propertyAPI } from '@/services/apiService';
-import PropertyCard from '@/components/ui/PropertyCard';
-import Loading from '@/components/ui/Loading';
+import FiltersForm from '@/components/ui/FiltersForm';
 import styles from './properties.module.css';
-import { useFavorites } from '@/hooks/useFavorites';
+import { Suspense } from 'react';
+import Loading from '@/components/ui/Loading';
+import PropertyCard from '@/components/ui/PropertyCard';
+import Link from 'next/link';
 
-export default function PropertiesPage() {
-  const [filters, setFilters] = useState({
-    page: 1,
-    limit: 12,
-    listing_type: '',
-    property_type: '',
-    city: '',
-    min_price: '',
-    max_price: '',
-  });
-  const [properties, setProperties] = useState([]);
-  const [pagination, setPagination] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const { toggleFavorite } = useFavorites();
+export default async function PropertiesPage({ searchParams }) {
+  const params = await searchParams;
+  const filters = {
+    page: params.page || 1,
+    limit: params.limit || 12,
+    listing_type: params.listing_type || '',
+    property_type: params.property_type || '',
+    city: params.city || '',
+    min_price: params.min_price || '',
+    max_price: params.max_price || '',
+  };
 
-  useEffect(() => {
-    const loadProperties = async () => {
-      setLoading(true);
-      try {
-        const cleanFilters = Object.fromEntries(
-          Object.entries(filters).filter(([_, v]) => v !== ''),
-        );
-        const response = await propertyAPI.getProperties(cleanFilters);
-        setProperties(response.data?.properties);
-        setPagination(response.data?.pagination);
-      } catch (error) {
-        console.error('Error loading properties:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadProperties();
-  }, [filters]);
+  const cleanFilters = Object.fromEntries(
+    Object.entries(filters).filter(([_, v]) => v !== ''),
+  );
 
-  // console.log(properties);
+  let properties = [];
+  let pagination = null;
 
-  function handleFilterChange(e) {
-    const { name, value } = e.target;
-    setFilters({
-      ...filters,
-      [name]: value,
-      page: 1, // Reset to first page when filters change
-    });
+  try {
+    const response = await propertyAPI.getProperties(cleanFilters);
+    properties = response.data.properties || [];
+    pagination = response.data.pagination || null;
+  } catch (error) {
+    console.error('Error loading properties:', error);
   }
 
-  const handlePageChange = (newPage) => {
-    setFilters({ ...filters, page: newPage });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  const currentPage = Number(filters.page);
+  const totalPages = pagination?.totalPages ?? 1;
+
+  function buildPageUrl(page) {
+    const p = new URLSearchParams({ ...params, page });
+    console.log(`/properties?${p.toString()}`);
+    return `/properties?${p.toString()}`;
+  }
+
+  // console.log('Properties:', properties);
 
   return (
     <div className={styles.page}>
@@ -65,72 +52,9 @@ export default function PropertiesPage() {
           <p>Find your perfect home or investment</p>
         </div>
 
-        <div className={styles.filters}>
-          <select
-            name='listing_type'
-            id='listing_type'
-            aria-label='listing_type'
-            className='form-select'
-            value={filters.listing_type}
-            onChange={handleFilterChange}
-          >
-            <option value=''>All Listings</option>
-            <option value='sale'>For Sale</option>
-            <option value='rent'>For Rent</option>
-          </select>
+        <FiltersForm filters={filters} />
 
-          <select
-            name='property_type'
-            id='property_type'
-            value={filters.property_type}
-            onChange={handleFilterChange}
-            className='form-select'
-            aria-label='property type'
-          >
-            <option value=''>All Types</option>
-            <option value='house'>House</option>
-            <option value='apartment'>Apartment</option>
-            <option value='condo'>Condo</option>
-            <option value='townhouse'>Townhouse</option>
-            <option value='land'>Land</option>
-          </select>
-
-          <input
-            type='text'
-            name='city'
-            value={filters.city}
-            onChange={handleFilterChange}
-            placeholder='City'
-            className='form-input'
-            aria-label='city'
-          />
-
-          <input
-            type='number'
-            name='min_price'
-            id='min_price'
-            value={filters.min_price}
-            onChange={handleFilterChange}
-            placeholder='Min Price'
-            className='form-input'
-            aria-label='minimum price'
-          />
-
-          <input
-            type='number'
-            name='max_price'
-            id='max_price'
-            value={filters.max_price}
-            onChange={handleFilterChange}
-            placeholder='Max Price'
-            className='form-input'
-            aria-label='maximum price'
-          />
-        </div>
-
-        {loading ? (
-          <Loading />
-        ) : (
+        <Suspense fallback={<Loading />}>
           <>
             {properties.length === 0 ? (
               <div className={styles.noResults}>
@@ -146,17 +70,27 @@ export default function PropertiesPage() {
                 </div>
                 <div className='grid grid-3'>
                   {properties.map((property) => (
-                    <PropertyCard
-                      key={property.id}
-                      property={property}
-                      onFavoriteToggle={toggleFavorite}
-                    />
+                    <PropertyCard key={property.id} property={property} />
                   ))}
                 </div>
+
+                {totalPages > 1 && (
+                  <div className={styles.pagination}>
+                    {currentPage > 1 && (
+                      <Link href={buildPageUrl(currentPage - 1)}>Previous</Link>
+                    )}
+                    <span>
+                      Page {currentPage} of {totalPages}
+                    </span>
+                    {currentPage < totalPages && (
+                      <Link href={buildPageUrl(currentPage + 1)}>Next</Link>
+                    )}
+                  </div>
+                )}
               </>
             )}
           </>
-        )}
+        </Suspense>
       </div>
     </div>
   );
