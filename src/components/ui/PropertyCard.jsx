@@ -7,11 +7,15 @@ import { formatPrice } from '@/utils/helpers';
 import styles from './PropertyCard.module.css';
 import { MapPin, Bed, Bath } from 'lucide-react';
 import { useFavorites } from '@/hooks/useFavorites';
+import { useAuth } from '@/app/context/AuthContext';
+import { useRouter } from 'next/navigation';
 
 export default function PropertyCard({ property }) {
   const [isFavorited, setIsFavorited] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toggleFavorite, checkFavorite } = useFavorites();
+  const { user } = useAuth();
+  const router = useRouter();
 
   const mainImage =
     property.images?.[0]?.image_url || '/images/placeholder.avif';
@@ -28,6 +32,10 @@ export default function PropertyCard({ property }) {
     setIsLoading(true);
 
     try {
+      if (!user) {
+        router.push('/auth/login');
+        return;
+      }
       const favorited = await toggleFavorite(property.id);
       setIsFavorited(favorited);
     } catch (error) {
