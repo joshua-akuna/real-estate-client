@@ -6,6 +6,7 @@ import styles from './property-detail.module.css';
 import { useState } from 'react';
 import Image from 'next/image';
 import { formatDate, formatPrice, getPropertyTypeLabel } from '@/utils/helpers';
+import ImageGallery from '@/components/ui/ImageGallery';
 
 export default function PropertyDetail({ property }) {
   const [isFavorited, setIsFavorited] = useState(false);
@@ -24,7 +25,7 @@ export default function PropertyDetail({ property }) {
 
         <div className={styles.content}>
           <div className=''>
-            <h1>Image Gallery Placeholder</h1>
+            <ImageGallery images={property.images} />
           </div>
 
           <div className={styles.info}>
@@ -76,14 +77,14 @@ export default function PropertyDetail({ property }) {
                   </span>
                   <div>
                     <strong>{Number(property.bathrooms)}</strong>
-                    <p>Bedrooms</p>
+                    <p>Bathrooms</p>
                   </div>
                 </div>
               )}
               {property.area_sqft > 0 && (
                 <div className={styles.feature}>
                   <span className={styles.featureIcon}>
-                    <LandPlot color='blue' />
+                    <LandPlot color='blue' size={45} />
                   </span>
                   <div>
                     <strong>{property.area_sqft.toLocaleString()}</strong>
