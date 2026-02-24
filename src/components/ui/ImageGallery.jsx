@@ -31,7 +31,7 @@ export default function ImageGallery({ images }) {
           <button
             key={image.id}
             className={`${styles.thumbnail} ${selectedImage === index ? styles.active : ''}`}
-            onClick={() => selectedImage(index)}
+            onClick={() => setselectedImage(index)}
           >
             <Image
               src={image.image_url}
