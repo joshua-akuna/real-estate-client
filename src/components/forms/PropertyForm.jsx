@@ -396,7 +396,7 @@ export default function PropertyForm() {
       </div>
 
       <button type='submit' disabled={loading} className='btn btn-primary'>
-        {loading ? 'Creating' : 'List Property'}
+        {loading ? 'Creating...' : 'List Property'}
       </button>
     </form>
   );
