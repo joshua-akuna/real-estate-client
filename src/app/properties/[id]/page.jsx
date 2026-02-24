@@ -1,4 +1,5 @@
 import { propertyAPI } from '@/services/apiService';
+import PropertyDetail from './PropertyDetail';
 
 export async function generateMetadata({ params }) {
   try {
@@ -38,5 +39,5 @@ export default async function PropertyPage({ params }) {
       </div>
     );
   }
-  return <h1>Property Detail</h1>;
+  return <PropertyDetail property={property} />;
 }
