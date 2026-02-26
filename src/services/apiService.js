@@ -33,7 +33,11 @@ apiService.interceptors.response.use(
           : '';
 
       // Redirect to login if unauthorized and not already on login page
-      if (currentPath === '/' || currentPath === '/properties') {
+      if (
+        currentPath === '/' ||
+        currentPath === '/properties' ||
+        currentPath.startsWith('/properties/')
+      ) {
       } else if (currentPath !== '/auth/login' && typeof window !== undefined) {
         window.location.href = '/auth/login';
       }
@@ -42,7 +46,7 @@ apiService.interceptors.response.use(
   },
 );
 
-// AUTH API
+// AUTH API requests
 export const authAPI = {
   login: (data) => apiService.post('/v1/auth/login', data),
   register: (data) => apiService.post('/v1/auth/register', data),
@@ -50,7 +54,7 @@ export const authAPI = {
   logout: () => apiService.post('/v1/auth/logout'),
 };
 
-// Property API
+// Property API requests
 export const propertyAPI = {
   createProperty: (data) =>
     apiService.post('/v1/properties', data, {
@@ -60,11 +64,16 @@ export const propertyAPI = {
   getProperty: (id) => apiService.get(`/v1/properties/${id}`),
 };
 
-// Favorite API
+// Favorite API requests
 export const favoriteAPI = {
   toggleFavorite: (propertyId) =>
     apiService.post('/v1/favorites/toggle', { property_id: propertyId }),
   getFavorites: () => apiService.get('/favorites'),
   checkFavorite: (propertyId) =>
     apiService.get(`/v1/favorites/check/${propertyId}`),
+};
+
+// Message API requests
+export const messageAPI = {
+  sendMessage: (data) => apiService.post('/v1/messages', data),
 };
