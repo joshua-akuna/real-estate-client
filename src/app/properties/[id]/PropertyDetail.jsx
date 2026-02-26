@@ -1,19 +1,59 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowLeft, BathIcon, BedIcon, LandPlot, MapPin } from 'lucide-react';
+import { BathIcon, BedIcon, LandPlot, MapPin } from 'lucide-react';
 import styles from './property-detail.module.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { formatDate, formatPrice, getPropertyTypeLabel } from '@/utils/helpers';
 import ImageGallery from '@/components/ui/ImageGallery';
+import { useAuth } from '@/app/context/AuthContext';
+import { useRouter } from 'next/navigation';
+import { useFavorites } from '@/hooks/useFavorites';
+import MessageForm from '@/components/forms/MessageForm';
 
 export default function PropertyDetail({ property }) {
   const [isFavorited, setIsFavorited] = useState(false);
   const [showMessageForm, setshowMessageForm] = useState(false);
+  const [success, setSuccess] = useState('');
+  const { user } = useAuth();
+  const router = useRouter();
+  const { checkFavorite, toggleFavorite } = useFavorites();
 
-  const toggleFavorite = () => {
-    setIsFavorited((prev) => !prev);
+  useEffect(() => {
+    const checkFav = async () => {
+      if (!user) return;
+      const isFavorite = await checkFavorite(property.id);
+      setIsFavorited(isFavorite);
+    };
+    checkFav();
+  }, []);
+
+  const toggleShowMessageForm = () => {
+    if (!user) {
+      router.push('/auth/login');
+    } else {
+      setshowMessageForm(!showMessageForm);
+    }
+  };
+
+  const handleMessageSuccess = () => {
+    setshowMessageForm(false);
+    setSuccess('Message sent successfully');
+  };
+
+  const handleToggleFavorite = async (e) => {
+    e.preventDefault();
+    try {
+      if (!user) {
+        router.push('/auth/login');
+      } else {
+        const favorited = await toggleFavorite(property.id);
+        setIsFavorited(favorited);
+      }
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+    }
   };
 
   return (
@@ -40,7 +80,10 @@ export default function PropertyDetail({ property }) {
                   {property.state} {property.zip_code}
                 </p>
               </div>
-              <button onClick={toggleFavorite} className={styles.favoriteBtn}>
+              <button
+                onClick={handleToggleFavorite}
+                className={styles.favoriteBtn}
+              >
                 {isFavorited ? '❤️' : '🤍'}
               </button>
             </div>
@@ -133,26 +176,37 @@ export default function PropertyDetail({ property }) {
                 )}
                 <div>
                   <strong>{property.owner_name}</strong>
-                  <p>{property.owner_email}</p>
-                  {property.owner_phone && <p>{property.owner_phone}</p>}
+                  {user && (
+                    <>
+                      <p>{property.owner_email}</p>
+                      {property.owner_phone && <p>{property.owner_phone}</p>}
+                    </>
+                  )}
                 </div>
               </div>
             </div>
-
-            <div className={styles.actions}>
-              <button
-                onClick={() => setshowMessageForm(!showMessageForm)}
-                className='btn btn-primary'
-              >
-                {showMessageForm ? 'Hide Message Form' : 'Contact Owner'}
-              </button>
-            </div>
+            {/* Displays button if user is signed in and doesn't own the property */}
+            {user && user.id !== property.owner_id ? (
+              <div className={styles.actions}>
+                <button
+                  onClick={toggleShowMessageForm}
+                  className='btn btn-primary'
+                >
+                  {showMessageForm ? 'Hide Message Form' : 'Contact Owner'}
+                </button>
+              </div>
+            ) : null}
 
             {showMessageForm && (
               <div className={styles.messageForm}>
-                <h2>Message Form Placeholder</h2>
+                <MessageForm
+                  receiverId={property.owner_id}
+                  propertyId={property.id}
+                  onSuccess={handleMessageSuccess}
+                />
               </div>
             )}
+            {success && <div className={styles.success}>{success}</div>}
           </div>
         </div>
       </div>
