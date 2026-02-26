@@ -22,7 +22,9 @@ export default function PropertyCard({ property }) {
 
   useEffect(() => {
     const checkFav = async () => {
-      setIsFavorited(await checkFavorite(property.id));
+      if (!user) return;
+      const isFavorite = await checkFavorite(property.id);
+      setIsFavorited(isFavorite);
     };
     checkFav();
   }, []);
