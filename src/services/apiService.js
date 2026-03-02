@@ -62,13 +62,16 @@ export const propertyAPI = {
     }),
   getProperties: (params) => apiService.get('/v1/properties', { params }),
   getProperty: (id) => apiService.get(`/v1/properties/${id}`),
+  getUserProperties: () => apiService.get('/v1/properties/my-properties'),
+  deleteProperty: (id) => apiService.delete(`/v1/properties/${id}`),
+  updateProperty: (id, data) => apiService.put(`/v1/properties/${id}`, data),
 };
 
 // Favorite API requests
 export const favoriteAPI = {
   toggleFavorite: (propertyId) =>
     apiService.post('/v1/favorites/toggle', { property_id: propertyId }),
-  getFavorites: () => apiService.get('/favorites'),
+  getFavorites: () => apiService.get('v1/favorites'),
   checkFavorite: (propertyId) =>
     apiService.get(`/v1/favorites/check/${propertyId}`),
 };
