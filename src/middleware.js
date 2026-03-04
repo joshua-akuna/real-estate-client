@@ -11,5 +11,10 @@ export function middleware(request) {
 }
 
 export const config = {
-  matcher: ['/properties/new/:path*', '/properties/my-properties/:path*'],
+  matcher: [
+    '/properties/new/:path*',
+    '/properties/my-properties/:path*',
+    '/messages/:path*',
+    '/favorites/:path*',
+  ],
 };
