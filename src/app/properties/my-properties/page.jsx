@@ -33,21 +33,24 @@ export default function MyPropertiesPage() {
     loadProperties();
   }, []);
 
-  if (loading) {
-    return <Loading />;
-  }
-
   const handleDelete = async (propertyId) => {
-    if (!confirm('Confirm to delete')) return;
+    if (!confirm('Are you sure you want to delete this property?')) return;
 
     try {
       await propertyAPI.deleteProperty(propertyId);
       const response = await propertyAPI.getUserProperties();
       setProperties(response.data?.properties);
     } catch (error) {
-      alert('Failed to delete property');
+      alert(
+        'Failed to delete property:' +
+          (error.response?.data?.message || 'Unknown error'),
+      );
     }
   };
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div className={styles.page}>
