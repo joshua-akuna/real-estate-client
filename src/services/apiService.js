@@ -79,4 +79,9 @@ export const favoriteAPI = {
 // Message API requests
 export const messageAPI = {
   sendMessage: (data) => apiService.post('/v1/messages', data),
+  getInbox: () => apiService.get('/v1/messages/inbox'),
+  getSentMessages: () => apiService.get('/v1/messages/sent'),
+  getMessageThread: (userId) => apiService.get(`/v1/message/thread/${userId}`),
+  markAsRead: (messageId) => apiService.patch(`/v1/messages/${messageId}/read`),
+  getUnreadCount: () => apiService.get(`/v1/messages/unread-count`),
 };
