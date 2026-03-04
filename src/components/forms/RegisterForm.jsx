@@ -31,7 +31,7 @@ export default function RegisterForm() {
   }
 
   function handleGoogleLogin() {
-    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/v1/auth/google`;
+    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
   }
 
   async function handleSubmit(e) {
@@ -125,7 +125,7 @@ export default function RegisterForm() {
           />
         </div>
         <button className='btn btn-primary' type='submit' disabled={loading}>
-          {loading ? 'Creating account...' : 'Register'}
+          {loading ? 'Creating Account...' : 'Register'}
         </button>
         <div className={styles.divider}>
           <span>OR</span>
