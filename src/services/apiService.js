@@ -48,40 +48,40 @@ apiService.interceptors.response.use(
 
 // AUTH API requests
 export const authAPI = {
-  login: (data) => apiService.post('/v1/auth/login', data),
-  register: (data) => apiService.post('/v1/auth/register', data),
-  profile: () => apiService.get('/v1/auth/profile'),
-  logout: () => apiService.post('/v1/auth/logout'),
+  login: (data) => apiService.post('/auth/login', data),
+  register: (data) => apiService.post('/auth/register', data),
+  profile: () => apiService.get('/auth/profile'),
+  logout: () => apiService.post('/auth/logout'),
 };
 
 // Property API requests
 export const propertyAPI = {
   createProperty: (data) =>
-    apiService.post('/v1/properties', data, {
+    apiService.post('/properties', data, {
       headers: { 'Content-Type': 'multipart/form-data' },
     }),
-  getProperties: (params) => apiService.get('/v1/properties', { params }),
-  getProperty: (id) => apiService.get(`/v1/properties/${id}`),
-  getUserProperties: () => apiService.get('/v1/properties/my-properties'),
-  deleteProperty: (id) => apiService.delete(`/v1/properties/${id}`),
-  updateProperty: (id, data) => apiService.put(`/v1/properties/${id}`, data),
+  getProperties: (params) => apiService.get('/properties', { params }),
+  getProperty: (id) => apiService.get(`/properties/${id}`),
+  getUserProperties: () => apiService.get('/properties/my-properties'),
+  deleteProperty: (id) => apiService.delete(`/properties/${id}`),
+  updateProperty: (id, data) => apiService.put(`/properties/${id}`, data),
 };
 
 // Favorite API requests
 export const favoriteAPI = {
   toggleFavorite: (propertyId) =>
-    apiService.post('/v1/favorites/toggle', { property_id: propertyId }),
-  getFavorites: () => apiService.get('v1/favorites'),
+    apiService.post('/favorites/toggle', { property_id: propertyId }),
+  getFavorites: () => apiService.get('/favorites'),
   checkFavorite: (propertyId) =>
-    apiService.get(`/v1/favorites/check/${propertyId}`),
+    apiService.get(`/favorites/check/${propertyId}`),
 };
 
 // Message API requests
 export const messageAPI = {
-  sendMessage: (data) => apiService.post('/v1/messages', data),
-  getInbox: () => apiService.get('/v1/messages/inbox'),
-  getSentMessages: () => apiService.get('/v1/messages/sent'),
-  getMessageThread: (userId) => apiService.get(`/v1/message/thread/${userId}`),
-  markAsRead: (messageId) => apiService.patch(`/v1/messages/${messageId}/read`),
-  getUnreadCount: () => apiService.get(`/v1/messages/unread-count`),
+  sendMessage: (data) => apiService.post('/messages', data),
+  getInbox: () => apiService.get('/messages/inbox'),
+  getSentMessages: () => apiService.get('/messages/sent'),
+  getMessageThread: (userId) => apiService.get(`/messages/thread/${userId}`),
+  markAsRead: (messageId) => apiService.patch(`/messages/${messageId}/read`),
+  getUnreadCount: () => apiService.get(`/messages/unread-count`),
 };
