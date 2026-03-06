@@ -26,7 +26,7 @@ apiService.interceptors.response.use(
   },
   (error) => {
     // console.log(error);
-    if (error.response?.status === 401) {
+    if (!error.response || error.response?.status === 401) {
       const currentPath =
         window.location.pathname !== 'undefined'
           ? window.location.pathname
@@ -42,6 +42,8 @@ apiService.interceptors.response.use(
         window.location.href = '/auth/login';
       }
     }
+    // console.log(error.response);
+
     return Promise.reject(error);
   },
 );
@@ -65,6 +67,7 @@ export const propertyAPI = {
   getUserProperties: () => apiService.get('/properties/my-properties'),
   deleteProperty: (id) => apiService.delete(`/properties/${id}`),
   updateProperty: (id, data) => apiService.put(`/properties/${id}`, data),
+  getPropertyForEdit: (id) => apiService.get(`/properties/${id}/edit`),
 };
 
 // Favorite API requests
