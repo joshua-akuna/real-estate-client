@@ -104,6 +104,22 @@ export default function PropertyEditForm({ propertyId }) {
     }
   };
 
+  const handleUndoDeleteImage = (imageId) => {
+    setImagesToDelete(imagesToDelete.filter((id) => id !== imageId));
+  };
+
+  const handleDeleteExistingImage = (imageId) => {
+    if (
+      existingImages.length - imagesToDelete.length - 1 + newImages.length <
+      1
+    ) {
+      setError('Property must have at least one image');
+      return;
+    }
+    setImagesToDelete([...imagesToDelete, imageId]);
+    setError('');
+  };
+
   if (initialLoading) {
     return <Loading />;
   }
@@ -363,7 +379,7 @@ export default function PropertyEditForm({ propertyId }) {
                         <button
                           className={styles.undoBtn}
                           type='button'
-                          onClick={``}
+                          onClick={() => handleUndoDeleteImage(image.id)}
                         >
                           Undo
                         </button>
@@ -371,7 +387,7 @@ export default function PropertyEditForm({ propertyId }) {
                         <button
                           className={styles.deleteBtn}
                           type='button'
-                          onClick={``}
+                          onClick={() => handleDeleteExistingImage(image.id)}
                         >
                           Delete
                         </button>
@@ -390,9 +406,9 @@ export default function PropertyEditForm({ propertyId }) {
         {imageUpdateMode && (
           <>
             {/* Add New Images */}
-            <div className=''>
-              <div>
-                <h3>Add New Images</h3>
+            <div className={styles.addImages}>
+              <h3>Add New Images</h3>
+              <div className='form-group'>
                 <input
                   type='file'
                   multiple
