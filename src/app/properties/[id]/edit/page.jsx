@@ -1,10 +1,13 @@
+import PropertyEditForm from '@/components/forms/PropertyEditForm';
 import styles from './edit.module.css';
 
 export const metadata = {
   title: 'Edit Property - Real Estate App',
 };
 
-export default function EditPropertyPage({ params }) {
+export default async function EditPropertyPage({ params }) {
+  const { id } = await params;
+
   return (
     <div className={styles.page}>
       <div className='container'>
@@ -12,6 +15,7 @@ export default function EditPropertyPage({ params }) {
           <h1>Edit Property</h1>
           <p>Update your property details and images</p>
         </div>
+        <PropertyEditForm propertyId={id} />
       </div>
     </div>
   );
