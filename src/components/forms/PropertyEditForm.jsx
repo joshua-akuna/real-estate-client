@@ -33,7 +33,7 @@ export default function PropertyEditForm({ propertyId }) {
     longitude: '',
     status: 'active',
   });
-
+  const [previews, setPreviews] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
   const [newImages, setNewImages] = useState([]);
   const [imagesToDelete, setImagesToDelete] = useState([]);
@@ -119,6 +119,25 @@ export default function PropertyEditForm({ propertyId }) {
     setImagesToDelete([...imagesToDelete, imageId]);
     setError('');
   };
+
+  const handleNewImagesChange = (e) => {
+    const files = Array.from(e.target.files);
+    const totalImages =
+      existingImages.length - imagesToDelete.length + files.length;
+
+    if (totalImages > 10) {
+      setError('Maximum 10 images allowed per property');
+      return;
+    }
+    setNewImages(files);
+    const newPreviews = files.map((file) => URL.createObjectURL(file));
+    setPreviews(newPreviews);
+    setError('');
+    return () => newPreviews.forEach((url) => URL.revokeObjectURL(url));
+  };
+
+  // console.log(previews);
+  // console.log(newImages);
 
   if (initialLoading) {
     return <Loading />;
@@ -414,33 +433,36 @@ export default function PropertyEditForm({ propertyId }) {
                   multiple
                   accept='image/*'
                   className='form-input'
-                  onChange={``}
+                  onChange={handleNewImagesChange}
                 />
                 {newImages.length > 0 && (
-                  <p className=''>{newImages.length} new image(s) selected</p>
+                  <p className={styles.imageCount}>
+                    {newImages.length} new image(s) selected
+                  </p>
                 )}
               </div>
 
               {newImages.length > 0 && (
-                <div className=''>
-                  {Array.from(newImages).map((file, index) => {
-                    <div className='' key={index}>
+                <div className={styles.newImagesPreviews}>
+                  {previews.map((url, index) => (
+                    <div key={url} className={styles.previewItem}>
                       <img
-                        src={URL.createObjectURL(file)}
+                        src={url}
                         alt={`New image ${index + 1}`}
-                        className=''
+                        className={styles.previewImage}
                       />
                       <span>New #{index + 1}</span>
-                    </div>;
-                  })}
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
 
             {/* Action buttons */}
-            <div className=''>
+            <div className={styles.imageActions}>
               <button
                 type='button'
+                onClick={``}
                 className='btn btn-primary'
                 disabled={
                   loading ||
@@ -460,7 +482,7 @@ export default function PropertyEditForm({ propertyId }) {
               </button>
             </div>
 
-            <p className=''>
+            <p className={styles.hint}>
               <strong>Tip:</strong> You can delete existing images and add new
               ones, or use &apos;Replace All Images&apos; to remove all current
               images and upload new ones. Maximum 10 images allowed.
