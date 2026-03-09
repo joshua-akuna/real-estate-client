@@ -43,7 +43,6 @@ apiService.interceptors.response.use(
       }
     }
     // console.log(error.response);
-
     return Promise.reject(error);
   },
 );
@@ -68,6 +67,10 @@ export const propertyAPI = {
   deleteProperty: (id) => apiService.delete(`/properties/${id}`),
   updateProperty: (id, data) => apiService.put(`/properties/${id}`, data),
   getPropertyForEdit: (id) => apiService.get(`/properties/${id}/edit`),
+  updatePropertyImages: (id, data) =>
+    apiService.put(`/properties/${id}/images`, data, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    }),
 };
 
 // Favorite API requests
