@@ -91,16 +91,22 @@ export default function PropertyEditForm({ propertyId }) {
     }
   };
 
-  const handleSubmitDetails = (e) => {
+  const handleSubmitDetails = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
     setSuccessMessage('');
-    console.log(formData);
+    // console.log(formData);
 
     try {
+      // Update property details
+      await propertyAPI.updateProperty(propertyId, formData);
+      setSuccessMessage('Property details updated successfully');
+      setTimeout(() => setSuccessMessage(''), 3000);
     } catch (error) {
+      setError(error.response?.data?.message || 'Failed to update property');
     } finally {
+      setLoading(false);
     }
   };
 
@@ -108,14 +114,19 @@ export default function PropertyEditForm({ propertyId }) {
     setImagesToDelete(imagesToDelete.filter((id) => id !== imageId));
   };
 
+  const handleRemoveNewImage = (index) => {
+    setNewImages(newImages.filter((_, i) => i !== index));
+  };
+
   const handleDeleteExistingImage = (imageId) => {
-    if (
-      existingImages.length - imagesToDelete.length - 1 + newImages.length <
-      1
-    ) {
+    const remainingImages = existingImages.length - imagesToDelete.length - 1;
+    const totalAfterDelete = remainingImages + newImages.length;
+
+    if (totalAfterDelete < 1) {
       setError('Property must have at least one image');
       return;
     }
+
     setImagesToDelete([...imagesToDelete, imageId]);
     setError('');
   };
@@ -136,8 +147,89 @@ export default function PropertyEditForm({ propertyId }) {
     return () => newPreviews.forEach((url) => URL.revokeObjectURL(url));
   };
 
+  const handleSubmitImages = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setSuccessMessage('');
+
+    try {
+      // Step 1: Delete marked images one by one
+      if (imagesToDelete.length > 0) {
+        for (const imageId of imagesToDelete) {
+          await propertyAPI.deletePropertyImage(propertyId, imageId);
+        }
+      }
+
+      // Step 2: Add new images (this will append to existing images)
+      if (newImages.length > 0) {
+        // Get current image count after deletions
+        const currentImageCount = existingImages.length - imagesToDelete.length;
+
+        const imageData = new FormData();
+        newImages.forEach((image) => imageData.append('images', image));
+
+        // Use a different endpoint for adding images (not replacing)
+        await propertyAPI.addPropertyImages(propertyId, imageData);
+      }
+
+      // Step 3: Reload property to get updated images
+      await loadProperty();
+      setNewImages([]);
+      setImagesToDelete([]);
+      setImageUpdateMode(false);
+
+      setSuccessMessage('Images updated successfully');
+      setTimeout(() => setSuccessMessage(''), 3000);
+    } catch (error) {
+      setError(error.response?.data?.message || 'Failed to update images');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleReplaceAllImages = async (e) => {
+    e.preventDefault();
+    // checks if there are images to upload
+    if (newImages.length === 0) {
+      setError('Please select new images to upload');
+      return;
+    }
+    // checks if there are more than 10 images selected
+    if (newImages.length > 10) {
+      setError('Maximum 10 images allowed');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    setSuccessMessage('');
+
+    try {
+      const imageData = new FormData();
+      newImages.forEach((image) => imageData.append('images', image));
+      // This endpoint replaces all images
+      await propertyAPI.updatePropertyImages(propertyId, imageData);
+      await loadProperty();
+
+      setNewImages([]);
+      setImagesToDelete([]);
+      setImageUpdateMode(false);
+
+      setSuccessMessage('All images replaced successfully');
+      setTimeout(() => setSuccessMessage(''), 3000);
+    } catch (error) {
+      setError(error.response?.data?.message || 'Failed to replace images');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // console.log(previews);
   // console.log(newImages);
+
+  const remainingImagesCount = existingImages.length - imagesToDelete.length;
+  const totalImagesAfterChanges = remainingImagesCount + newImages.length;
 
   if (initialLoading) {
     return <Loading />;
@@ -145,8 +237,10 @@ export default function PropertyEditForm({ propertyId }) {
 
   return (
     <div className={styles.editForm}>
-      {error && <div className=''>{error}</div>}
-      {successMessage && <div className=''>{successMessage}</div>}
+      {error && <div className='error-message'>{error}</div>}
+      {successMessage && (
+        <div className='success-message'>{successMessage}</div>
+      )}
 
       {/* Property Details Section */}
       <div className={styles.section}>
@@ -476,7 +570,7 @@ export default function PropertyEditForm({ propertyId }) {
                 type='button'
                 className='btn btn-secondary'
                 disabled={loading || newImages.length === 0}
-                onClick={``}
+                onClick={handleReplaceAllImages}
               >
                 Replace All Images
               </button>
