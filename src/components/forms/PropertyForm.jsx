@@ -6,6 +6,7 @@ import { Country, State, City } from 'country-state-city';
 import Select from 'react-select';
 import { propertyAPI } from '@/services/apiService';
 import styles from './PropertyForm.module.css';
+import ImagePicker from '../ui/ImagePicker';
 
 export default function PropertyForm() {
   const [formData, setFormData] = useState({
@@ -380,14 +381,15 @@ export default function PropertyForm() {
         <label htmlFor='images' className='form-label'>
           Primary Images (Max 10)
         </label>
-        <input
+        {/* <input
           id='images'
           className='form-input'
           type='file'
           multiple
           accept='image/*'
           onChange={handleImageChange}
-        />
+        /> */}
+        <ImagePicker onImagesChange={setImages} />
         {images.length > 0 && (
           <p className={styles.imageCount}>
             {images.length} {images.length === 1 ? 'image' : 'images'} selected
