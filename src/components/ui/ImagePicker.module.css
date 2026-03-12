@@ -1,0 +1,67 @@
+.ip_wrapper {
+  border: 1.5px solid #c5d4f0;
+  border-radius: 10px;
+  padding: 10px;
+  background: #fff;
+}
+
+.ip_grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
+}
+
+.ip_cell {
+  aspect-ratio: 4 / 3;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Upload button */
+.ip_upload {
+  border: 1.5px dashed #93b4f0;
+  background: #f0f5ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #5b8de8;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+
+.ip_upload:hover {
+  background: #e4edff;
+  border-color: #3b6fd4;
+}
+
+/* Thumbnail */
+.ip_thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  image-rendering: high-quality;
+}
+
+/* Remove button */
+.ip_remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  font-size: 9px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+}
