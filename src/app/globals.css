@@ -102,7 +102,7 @@ img {
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 .form-label {
@@ -116,7 +116,7 @@ img {
 .form-select,
 .form-textarea {
   width: 100%;
-  padding: 12px;
+  padding: 8px;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   font-size: 16px;
