@@ -72,7 +72,7 @@ export const propertyAPI = {
       headers: { 'Content-Type': 'multipart/form-data' },
     }),
   deletePropertyImage: (propertyId, imageId) =>
-    apiService.delete(`/properties/${propertyId}/images${imageId}`),
+    apiService.delete(`/properties/${propertyId}/images/${imageId}`),
   addPropertyImages: (id, data) =>
     apiService.post(`/properties/${id}/images`, data, {
       headers: { 'Content-Type': 'multipart/form-data' },
