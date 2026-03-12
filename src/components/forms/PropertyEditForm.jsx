@@ -6,6 +6,7 @@ import Loading from '../ui/Loading';
 import styles from './PropertyEditForm.module.css';
 import { propertyAPI } from '@/services/apiService';
 import { useParams, useRouter } from 'next/navigation';
+import ImagePicker from '../ui/ImagePicker';
 
 export default function PropertyEditForm({ propertyId }) {
   const router = useRouter();
@@ -116,6 +117,10 @@ export default function PropertyEditForm({ propertyId }) {
 
   const handleRemoveNewImage = (index) => {
     setNewImages(newImages.filter((_, i) => i !== index));
+    const newPreviews = newImages.map((file) => URL.createObjectURL(file));
+    setPreviews(newPreviews);
+    setError('');
+    // return () => newPreviews.forEach((url) => URL.revokeObjectURL(url));
   };
 
   const handleDeleteExistingImage = (imageId) => {
@@ -247,39 +252,39 @@ export default function PropertyEditForm({ propertyId }) {
         <h2>Property Details</h2>
         <form onSubmit={handleSubmitDetails}>
           <div className='form-group'>
-            <label htmlFor='title' className=''>
+            <label htmlFor='title' className='form-label'>
               Title
             </label>
             <input
               type='text'
               name='title'
               id='title'
-              className=''
+              className='form-input'
               onChange={handleChange}
               value={formData.title}
             />
           </div>
-          <div className=''>
-            <label htmlFor='description' className=''>
+          <div className='form-group'>
+            <label htmlFor='description' className='form-label'>
               Description
             </label>
             <textarea
               name='description'
               id='description'
-              className=''
+              className='form-textarea'
               value={formData.description}
               onChange={handleChange}
             ></textarea>
           </div>
-          <div className=''>
-            <div className=''>
-              <label htmlFor='property_type' className=''>
+          <div className={styles.row}>
+            <div className='form-group'>
+              <label htmlFor='property_type' className='form-label'>
                 Property Type
               </label>
               <select
                 name='property_type'
                 id='property_type'
-                className=''
+                className='form-select'
                 value={formData.property_type}
                 onChange={handleChange}
               >
@@ -291,14 +296,14 @@ export default function PropertyEditForm({ propertyId }) {
               </select>
             </div>
 
-            <div className=''>
-              <label htmlFor='listing_type' className=''>
+            <div className='form-group'>
+              <label htmlFor='listing_type' className='form-label'>
                 Listing Types
               </label>
               <select
                 name='listing_type'
                 id='listing_type'
-                className=''
+                className='form-select'
                 value={formData.listing_type}
                 onChange={handleChange}
               >
@@ -308,14 +313,14 @@ export default function PropertyEditForm({ propertyId }) {
             </div>
           </div>
 
-          <div className=''>
-            <div className=''>
-              <label htmlFor='price' className=''>
+          <div className={styles.row}>
+            <div className='form-group'>
+              <label htmlFor='price' className='form-label'>
                 Price
               </label>
               <input
                 type='number'
-                className=''
+                className='form-input'
                 name='price'
                 id='price'
                 min='0'
@@ -324,20 +329,17 @@ export default function PropertyEditForm({ propertyId }) {
               />
             </div>
             {formData.listing_type === 'rent' && (
-              <div className=''>
-                <label htmlFor='rental_period' className=''>
+              <div className='form-group'>
+                <label htmlFor='rental_period' className='form-label'>
                   Rental Period
                 </label>
                 <select
                   name='rental_period'
                   id='rental_period'
-                  className=''
+                  className='form-select'
                   value={formData.rental_period}
                   onChange={handleChange}
                 >
-                  <option value='' disabled hidden>
-                    Select an option
-                  </option>
                   <option value='day'>Per Day</option>
                   <option value='week'>Per Week</option>
                   <option value='month'>Per Month</option>
@@ -346,14 +348,14 @@ export default function PropertyEditForm({ propertyId }) {
               </div>
             )}
 
-            <div className=''>
-              <label htmlFor='status' className=''>
+            <div className='form-group'>
+              <label htmlFor='status' className='form-label'>
                 Status
               </label>
               <select
                 name='status'
                 id='status'
-                className=''
+                className='form-select'
                 value={formData.status}
                 onChange={handleChange}
               >
@@ -365,14 +367,14 @@ export default function PropertyEditForm({ propertyId }) {
             </div>
           </div>
 
-          <div className=''>
-            <div className=''>
-              <label htmlFor='bedrooms' className=''>
+          <div className={styles.row}>
+            <div className='form-group'>
+              <label htmlFor='bedrooms' className='form-label'>
                 Bedrooms
               </label>
               <input
                 type='number'
-                className=''
+                className='form-input'
                 name='bedrooms'
                 id='bedrooms'
                 value={formData.bedrooms}
@@ -381,13 +383,13 @@ export default function PropertyEditForm({ propertyId }) {
               />
             </div>
 
-            <div className=''>
-              <label htmlFor='bathrooms' className=''>
+            <div className='form-group'>
+              <label htmlFor='bathrooms' className='form-label'>
                 Bathrooms
               </label>
               <input
                 type='number'
-                className=''
+                className='form-input'
                 name='bathrooms'
                 id='bathrooms'
                 value={formData.bathrooms}
@@ -396,13 +398,13 @@ export default function PropertyEditForm({ propertyId }) {
               />
             </div>
 
-            <div className=''>
-              <label htmlFor='area_sqft' className=''>
+            <div className='form-group'>
+              <label htmlFor='area_sqft' className='form-label'>
                 Area (sqft)
               </label>
               <input
                 type='number'
-                className=''
+                className='form-input'
                 name='area_sqft'
                 id='area_sqft'
                 min='0'
@@ -412,13 +414,13 @@ export default function PropertyEditForm({ propertyId }) {
             </div>
           </div>
 
-          <div className=''>
-            <label htmlFor='address' className=''>
+          <div className='form-group'>
+            <label htmlFor='address' className='form-label'>
               Address
             </label>
             <input
               type='text'
-              className=''
+              className='form-input'
               name='address'
               id='address'
               value={formData.address}
@@ -426,18 +428,57 @@ export default function PropertyEditForm({ propertyId }) {
             />
           </div>
 
-          <div className=''>
-            <div className=''>
-              <label htmlFor='country' className=''>
-                Country *
+          <div className={styles.row}>
+            <div className='form-group'>
+              <label htmlFor='city' className='form-label'>
+                City *
               </label>
               <input
                 type='text'
-                className=''
+                className='form-input'
+                name='city'
+                id='city'
+                value={formData.city}
+                onChange={handleChange}
+                disabled
+              />
+            </div>
+            <div className='form-group'>
+              <label className='form-label'>State *</label>
+              <input
+                type='text'
+                name='state'
+                value={formData.state}
+                onChange={handleChange}
+                className='form-input'
+                required
+                disabled
+              />
+            </div>
+
+            <div className={styles.row}>
+              <div className='form-group'>
+                <label className='form-label'>ZIP Code *</label>
+                <input
+                  type='text'
+                  name='zip_code'
+                  value={formData.zip_code}
+                  onChange={handleChange}
+                  className='form-input'
+                  required
+                />
+              </div>
+            </div>
+            <div className='form-group'>
+              <label className='form-label'>Country *</label>
+              <input
+                type='text'
                 name='country'
-                id='country'
                 value={formData.country}
                 onChange={handleChange}
+                className='form-input'
+                requiredSS
+                disabled
               />
             </div>
           </div>
@@ -452,6 +493,11 @@ export default function PropertyEditForm({ propertyId }) {
       <div className={styles.section}>
         <div className={styles.sectionHeader}>
           <h2>Property Images</h2>
+          <div className={styles.imageCount}>
+            <span className={styles.countBadge}>
+              {totalImagesAfterChanges} / 10 images
+            </span>
+          </div>
           <button
             type='button'
             onClick={() => setImageUpdateMode(!imageUpdateMode)}
@@ -464,56 +510,60 @@ export default function PropertyEditForm({ propertyId }) {
         {/* Current images */}
         <div className={styles.currentImages}>
           <h3>Current Images ({existingImages.length})</h3>
-          <div className={styles.imageGrid}>
-            {existingImages.map((image) => {
-              const isMarkedForDeletion = imagesToDelete.includes(image.id);
-              return (
-                <div
-                  className={`${styles.imageItem} ${isMarkedForDeletion ? styles.markedForDeletion : ''}`}
-                  key={image.id}
-                >
-                  <div className={styles.imageWrapper}>
-                    <Image
-                      src={image.image_url}
-                      alt={`Property image ${image.image_order}`}
-                      fill
-                      sizes='200px'
-                      className={styles.image}
-                    />
-                    {isMarkedForDeletion && (
-                      <div className={styles.deletionOverlay}>
-                        <span>Will be deleted</span>
-                      </div>
-                    )}
-                  </div>
-                  {imageUpdateMode && (
-                    <div className={styles.imageActions}>
-                      {isMarkedForDeletion ? (
-                        <button
-                          className={styles.undoBtn}
-                          type='button'
-                          onClick={() => handleUndoDeleteImage(image.id)}
-                        >
-                          Undo
-                        </button>
-                      ) : (
-                        <button
-                          className={styles.deleteBtn}
-                          type='button'
-                          onClick={() => handleDeleteExistingImage(image.id)}
-                        >
-                          Delete
-                        </button>
+          {existingImages.length === 0 ? (
+            <p className={styles.noImages}>No images uploaded yet</p>
+          ) : (
+            <div className={styles.imageGrid}>
+              {existingImages.map((image) => {
+                const isMarkedForDeletion = imagesToDelete.includes(image.id);
+                return (
+                  <div
+                    className={`${styles.imageItem} ${isMarkedForDeletion ? styles.markedForDeletion : ''}`}
+                    key={image.id}
+                  >
+                    <div className={styles.imageWrapper}>
+                      <Image
+                        src={image.image_url}
+                        alt={`Property image ${image.image_order}`}
+                        fill
+                        sizes='200px'
+                        className={styles.image}
+                      />
+                      {isMarkedForDeletion && (
+                        <div className={styles.deletionOverlay}>
+                          <span>Will be deleted</span>
+                        </div>
                       )}
                     </div>
-                  )}
-                  <span className={styles.imageOrder}>
-                    #{image.image_order}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
+                    {imageUpdateMode && (
+                      <div className={styles.imageActions}>
+                        {isMarkedForDeletion ? (
+                          <button
+                            className={styles.undoBtn}
+                            type='button'
+                            onClick={() => handleUndoDeleteImage(image.id)}
+                          >
+                            Undo
+                          </button>
+                        ) : (
+                          <button
+                            className={styles.deleteBtn}
+                            type='button'
+                            onClick={() => handleDeleteExistingImage(image.id)}
+                          >
+                            Delete
+                          </button>
+                        )}
+                      </div>
+                    )}
+                    <span className={styles.imageOrder}>
+                      #{image.image_order}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {imageUpdateMode && (
@@ -521,42 +571,82 @@ export default function PropertyEditForm({ propertyId }) {
             {/* Add New Images */}
             <div className={styles.addImages}>
               <h3>Add New Images</h3>
-              <div className='form-group'>
+              <p className={styles.addImagesHint}>
+                You can add up to {10 - remainingImagesCount} more image(s)
+              </p>
+              <ImagePicker
+                onImagesChange={setNewImages}
+                maxFiles={10 - remainingImagesCount}
+              />
+              {/* <div className='form-group'>
                 <input
                   type='file'
                   multiple
                   accept='image/*'
                   className='form-input'
                   onChange={handleNewImagesChange}
+                  disabled={remainingImagesCount >= 10}
                 />
                 {newImages.length > 0 && (
                   <p className={styles.imageCount}>
                     {newImages.length} new image(s) selected
                   </p>
                 )}
-              </div>
+              </div> */}
 
-              {newImages.length > 0 && (
+              {/* {newImages.length > 0 && (
                 <div className={styles.newImagesPreviews}>
                   {previews.map((url, index) => (
                     <div key={url} className={styles.previewItem}>
-                      <img
-                        src={url}
-                        alt={`New image ${index + 1}`}
-                        className={styles.previewImage}
-                      />
+                      <div className={styles.previewImageWrapper}>
+                        <img
+                          src={url}
+                          alt={`New image ${index + 1}`}
+                          className={styles.previewImage}
+                        />
+                        <button
+                          type='button'
+                          onClick={() => handleRemoveNewImage(index)}
+                        >
+                          ✕
+                        </button>
+                      </div>
                       <span>New #{index + 1}</span>
                     </div>
                   ))}
                 </div>
-              )}
+              )} */}
             </div>
 
+            {/* Summary */}
+            {(imagesToDelete.length > 0 || newImages.length > 0) && (
+              <div className={styles.changesSummary}>
+                <h4>Pending Changes:</h4>
+                <ul>
+                  {imagesToDelete.length > 0 && (
+                    <li className={styles.deleteSummary}>
+                      Will delete {imagesToDelete.length} image(s)
+                    </li>
+                  )}
+                  {newImages.length > 0 && (
+                    <li className={styles.addSummary}>
+                      Will add {newImages.length} new image(s)
+                    </li>
+                  )}
+                  <li>
+                    <strong>
+                      Total after changes: {totalImagesAfterChanges} / 10 images
+                    </strong>
+                  </li>
+                </ul>
+              </div>
+            )}
+
             {/* Action buttons */}
-            <div className={styles.imageActions}>
+            <div className={styles.buttonGroup}>
               <button
                 type='button'
-                onClick={``}
+                onClick={handleSubmitImages}
                 className='btn btn-primary'
                 disabled={
                   loading ||
@@ -576,11 +666,17 @@ export default function PropertyEditForm({ propertyId }) {
               </button>
             </div>
 
-            <p className={styles.hint}>
-              <strong>Tip:</strong> You can delete existing images and add new
-              ones, or use &apos;Replace All Images&apos; to remove all current
-              images and upload new ones. Maximum 10 images allowed.
-            </p>
+            <div className={styles.helpText}>
+              <p>
+                <strong>&quot;Apply Changes&quot;</strong> will delete marked
+                images and add new ones to your existing collection.
+              </p>
+              <p>
+                <strong>&quot;Replace All Images&quot;</strong> will remove ALL
+                current images and upload only the new ones you&apos;ve
+                selected.
+              </p>
+            </div>
           </>
         )}
       </div>
