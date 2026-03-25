@@ -3,11 +3,15 @@
 }
 
 .hero {
-  background: linear-gradient(
-    135deg,
-    var(--primary-color) 0%,
-    var(--secondary-color) 100%
-  );
+  background:
+    linear-gradient(
+      135deg,
+      var(--primary-color-background) 0%,
+      var(--secondary-color-background) 100%
+    ),
+    url('/images/interior.jpg');
+  background-size: cover;
+  background-position: center;
   color: white;
   padding: 120px 0;
   text-align: center;

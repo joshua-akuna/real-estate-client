@@ -6,8 +6,10 @@
 
 :root {
   --primary-color: #4f46e5;
-  --primary-dark: #4338ca;
+  --primary-color-background: rgba(18, 16, 55, 0.5);
+  --primary-dark: rgb(67, 56, 202);
   --secondary-color: #06b6d4;
+  --secondary-color-background: rgba(2, 44, 52, 0.5);
   --text-primary: #1f2937;
   --text-secondary: #6b7280;
   --bg-light: #f9fafb;
@@ -169,6 +171,10 @@ img {
   border-radius: var(--border-radius);
   box-shadow: var(--shadow-md);
   padding: 20px;
+}
+
+.white {
+  color: white;
 }
 
 .grid {

@@ -176,26 +176,20 @@ export default function PropertyDetail({ property }) {
                 )}
                 <div>
                   <strong>{property.owner_name}</strong>
-                  {user && (
-                    <>
-                      <p>{property.owner_email}</p>
-                      {property.owner_phone && <p>{property.owner_phone}</p>}
-                    </>
-                  )}
+                  <p>{property.owner_email}</p>
+                  {property.owner_phone && <p>{property.owner_phone}</p>}
                 </div>
               </div>
             </div>
             {/* Displays button if user is signed in and doesn't own the property */}
-            {user && user.id !== property.owner_id ? (
-              <div className={styles.actions}>
-                <button
-                  onClick={toggleShowMessageForm}
-                  className='btn btn-primary'
-                >
-                  {showMessageForm ? 'Hide Message Form' : 'Contact Owner'}
-                </button>
-              </div>
-            ) : null}
+            <div className={styles.actions}>
+              <button
+                onClick={toggleShowMessageForm}
+                className='btn btn-primary'
+              >
+                {showMessageForm ? 'Hide Message Form' : 'Contact Owner'}
+              </button>
+            </div>
 
             {showMessageForm && (
               <div className={styles.messageForm}>

@@ -1,4 +1,5 @@
 import styles from './Footer.module.css';
+import Link from 'next/link';
 
 export default function Footer() {
   return (
@@ -13,24 +14,29 @@ export default function Footer() {
             <h4>Quick Links</h4>
             <ul>
               <li>
-                <a href='/properties'>Properties</a>
+                <Link href='/properties'>Properties</Link>
               </li>
               <li>
-                <a href='/favorites'>Favorites</a>
+                <Link href='/favorites'>Favorites</Link>
               </li>
               <li>
-                <a href='/messages'>Messages</a>
+                <Link href='/messages'>Messages</Link>
               </li>
             </ul>
           </div>
           <div className={styles.footerSection}>
             <h4>Contact</h4>
-            <p>Email: info@realestate.com</p>
-            <p>Phone: (555) 123-4567</p>
+            <p>
+              Email:{' '}
+              <a href='mailto:akunajoshua@gmail.com'>akunajoshua@gmail.com</a>
+            </p>
+            <p>
+              Phone: <a href='tel:+2348151153399'>+234 815 115 3399</a>
+            </p>
           </div>
         </div>
         <div className={styles.footerBottom}>
-          <p>&copy; 2024 RealEstate. All rights reserved.</p>
+          <p>&copy; 2026 Naijacribs. All rights reserved.</p>
         </div>
       </div>
     </footer>

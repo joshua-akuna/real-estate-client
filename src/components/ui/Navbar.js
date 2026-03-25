@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { Menu, X } from 'lucide-react';
@@ -60,8 +61,15 @@ export default function Navbar() {
     <nav className={styles.navbar}>
       <div className={`container ${styles.navContainer}`}>
         <Link href='/' className={styles.logo}>
-          <span className={styles.logoIcon}>🏡</span>
-          RealEstate
+          <span className={styles.logoIcon}>
+            <Image
+              src='/images/icon.png'
+              alt='page icon'
+              width={30}
+              height={30}
+            />
+          </span>
+          Naijacribs
         </Link>
 
         <button

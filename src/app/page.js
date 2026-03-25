@@ -14,7 +14,7 @@ export default function Home() {
             <Link href='/properties' className='btn btn-primary'>
               Browse Properties
             </Link>
-            <Link href='/properties/new' className='btn btn-outline'>
+            <Link href='/properties/new' className='btn btn-outline white'>
               List Your Property
             </Link>
           </div>
